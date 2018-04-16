@@ -1,15 +1,22 @@
 #pragma once
 
-#include <QtWidgets/QMainWindow>
-#include "ui_pdftranslator.h"
+#include <QMainWindow>
+#include <QTextEdit>
 
-class pdftranslator : public QMainWindow
+class PdfTranslator : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-	pdftranslator(QWidget *parent = Q_NULLPTR);
-
+	PdfTranslator(QWidget *parent = 0);
+	~PdfTranslator();
 private:
-	Ui::pdftranslatorClass ui;
+	void open();
+	QAction *openAction;
+	void save();
+	QAction *saveAction;
+	void deleteEnter();
+	QAction *brushAction;
+
+	QTextEdit *textEdit;
 };

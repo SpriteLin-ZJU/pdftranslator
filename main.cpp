@@ -1,10 +1,12 @@
 #include "pdftranslator.h"
-#include <QtWidgets/QApplication>
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	pdftranslator w;
+	PdfTranslator w;
+	w.resize(700, 400);
 	w.show();
+
 	return a.exec();
 }
