@@ -1,5 +1,6 @@
 #include "pdftranslator.h"
 #include <QApplication>
+#include <stdio.h>
 
 int main(int argc, char *argv[])
 {
