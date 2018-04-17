@@ -33,7 +33,7 @@ public:
         qsrand(time(0));
         url = "https://translation.googleapis.com/language/translate/v2";
         appid = "20180416000147193";
-        key = "AIzaSyBcntEMjw6fXJPmP0KqGOkg_edcNoskEJY";
+        key = "";
         return true;
     }
 
