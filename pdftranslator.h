@@ -2,6 +2,8 @@
 
 #include <QMainWindow>
 #include <QTextEdit>
+#include "trans.h"
+
 
 class PdfTranslator : public QMainWindow
 {
@@ -17,6 +19,11 @@ private:
 	QAction *saveAction;
 	void deleteEnter();
 	QAction *brushAction;
+	void translate();
+	QAction *translateAction;
 
 	QTextEdit *textEdit;
+
+	Trans *trans;
+
 };

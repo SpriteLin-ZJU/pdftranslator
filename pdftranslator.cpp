@@ -7,11 +7,13 @@
 #include <QTextEdit>
 #include <QFileDialog>
 #include <QFile>
-
+#include <QFontDatabase>
 #include "pdftranslator.h"
 
+
 PdfTranslator::PdfTranslator(QWidget *parent)
-	: QMainWindow(parent)
+	: QMainWindow(parent),
+	trans(0)
 {
 	setWindowTitle(tr("PDF Translator"));
 	//open°´Å¥
@@ -28,6 +30,10 @@ PdfTranslator::PdfTranslator(QWidget *parent)
 	brushAction = new QAction(QIcon(":/images/Resources/images/paintbrush.png"), tr("&DeleteEnter..."), this);
 	brushAction->setStatusTip(tr("Delete line break"));
 	connect(brushAction, &QAction::triggered, this, &PdfTranslator::deleteEnter);
+	//·­Òë°´Å¥
+	translateAction = new QAction(QIcon(":/images/Resources/images/translate.png"), tr("&Translate..."), this);
+	translateAction->setStatusTip(tr("Translate text"));
+	connect(translateAction, &QAction::triggered, this, &PdfTranslator::translate);
 
 	QMenu *file = menuBar()->addMenu(tr("&File"));
 	file->addAction(openAction);
@@ -39,17 +45,21 @@ PdfTranslator::PdfTranslator(QWidget *parent)
 	toolBar->addAction(openAction);
 	toolBar->addAction(saveAction);
 	toolBar->addAction(brushAction);
+	toolBar->addAction(translateAction);
 
 	textEdit = new QTextEdit(this);
 	setCentralWidget(textEdit);
+	textEdit->setFont(QFont("Arial, Microsoft YaHei UI",12));
 
 	statusBar();
+
+	trans = new Trans;
 
 }
 
 PdfTranslator::~PdfTranslator()
 {
-
+	delete trans;
 }
 
 void PdfTranslator::open()
@@ -97,5 +107,17 @@ void PdfTranslator::deleteEnter()
 	text.replace("\n", " ");
 	textEdit->setText(text);
 
+}
+
+void PdfTranslator::translate()
+{
+	QString text = textEdit->toPlainText();
+	if (!text.isEmpty()) {
+		auto res = trans->translate(text, QString("auto"), QString("auto"));
+		if (res.first)
+			textEdit->setText(res.second);
+		else
+			statusBar()->showMessage("Error", 3000);
+	}
 }
 

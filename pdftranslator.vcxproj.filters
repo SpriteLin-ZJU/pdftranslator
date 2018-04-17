@@ -38,11 +38,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="pdftranslator.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
     <QtUic Include="pdftranslator.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -62,5 +57,16 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="tubiao.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="pdftranslator.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="trans.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="trans.cpp">
+      <Filter>Source Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>
