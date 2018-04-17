@@ -31,9 +31,9 @@ public:
     bool init()
     {
         qsrand(time(0));
-        url = "http://api.fanyi.baidu.com/api/trans/vip/translate";
+        url = "https://translation.googleapis.com/language/translate/v2";
         appid = "20180416000147193";
-        key = "IpGYAVJ3NZvEWXM_5Ujw";
+        key = "AIzaSyBcntEMjw6fXJPmP0KqGOkg_edcNoskEJY";
         return true;
     }
 
@@ -51,14 +51,15 @@ public:
                 .arg(salt)
                 .arg(sign);
         qDebug() << format;
-        QString postStr = QString("%7?q=%1&appid=%4&salt=%5&from=%2&to=%3&sign=%6")
+        QString postStr = QString("%5?key=%4&source=%2&target=%3&q=%1")
                 .arg(string)
                 .arg(from)
                 .arg(to)
-                .arg(appid)
-                .arg(salt)
-                .arg(sign)
+                .arg(key)
                 .arg(url);
+		qDebug() << postStr;
+		qDebug() << key;
+
         QByteArray buf;
         QNetworkRequest request = QNetworkRequest(QUrl(postStr));
         request.setRawHeader("Content-Type", "application");		//请求头
@@ -86,15 +87,16 @@ public:
         }
 
         QJsonObject data(QJsonDocument::fromJson(buf).object());
-        if(!data.contains("trans_result")
-             || data["trans_result"].toArray().isEmpty()
-             || !data["trans_result"].toArray()[0].toObject().contains("dst")) {
+		QJsonObject jason = data["data"].toArray()[0].toObject();
+        if(!jason.contains("translations")
+             || jason["translations"].toArray().isEmpty()
+             || !jason["translations"].toArray()[0].toObject().contains("translatedText")) {
             qDebug() << "no result";
 
             return { false, QString() };
         }
 
-        return { true, data["trans_result"].toArray()[0].toObject()["dst"].toString() };
+        return { true, jason["translations"].toArray()[0].toObject()["translatedText"].toString() };
 		//返回格式{"from":"en","to":"zh","trans_result":[{"src":"apple","dst":"\u82f9\u679c"}]}
     }
 

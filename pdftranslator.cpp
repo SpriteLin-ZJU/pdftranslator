@@ -113,7 +113,7 @@ void PdfTranslator::translate()
 {
 	QString text = textEdit->toPlainText();
 	if (!text.isEmpty()) {
-		auto res = trans->translate(text, QString("auto"), QString("auto"));
+		auto res = trans->translate(text, QString("zh"), QString("en"));
 		if (res.first)
 			textEdit->setText(res.second);
 		else
