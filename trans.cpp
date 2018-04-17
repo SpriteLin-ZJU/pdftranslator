@@ -61,17 +61,17 @@ public:
                 .arg(url);
         QByteArray buf;
         QNetworkRequest request = QNetworkRequest(QUrl(postStr));
-        request.setRawHeader("Content-Type", "application");
+        request.setRawHeader("Content-Type", "application");		//请求头
 
-        QNetworkReply *replay = NULL;
+        QNetworkReply *reply = NULL;
         auto c1 = connect(&himma, &QNetworkAccessManager::finished, [&](){
-            if (replay) {
-                buf = replay->readAll();
+            if (reply) {
+                buf = reply->readAll();
                event.exit(1);
             }
         });
 //        const QByteArray array = format.toUtf8();
-        replay = himma.get(request);
+        reply = himma.get(request);
 //        replay =  himma.post(request, format.toUtf8());
         event.exec();
 
@@ -81,8 +81,8 @@ public:
             qDebug() << "empty";
             return {false, string};
         } else {
-            QString jaso = buf;
-            qDebug() << jaso;
+            QString jason = buf;
+            qDebug() << jason;
         }
 
         QJsonObject data(QJsonDocument::fromJson(buf).object());
@@ -95,6 +95,7 @@ public:
         }
 
         return { true, data["trans_result"].toArray()[0].toObject()["dst"].toString() };
+		//返回格式{"from":"en","to":"zh","trans_result":[{"src":"apple","dst":"\u82f9\u679c"}]}
     }
 
 private:
@@ -109,6 +110,8 @@ private:
 
     QNetworkAccessManager himma;
 };
+
+
 Trans::Trans( QObject *parent) : QObject(parent)
 {
     parser = new Parser;
