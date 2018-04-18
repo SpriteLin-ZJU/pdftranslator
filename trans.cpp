@@ -10,19 +10,7 @@
 #include <time.h>
 #include <QDebug>
 
-QString toMd5(QString str)
-{
-    QString md5;
-    QByteArray array;
-    array = QCryptographicHash::hash(str.toUtf8(), QCryptographicHash::Md5);
-    md5 = array.toHex();
-    return md5;
-}
-QString signCreate(QString appid, QString q, int salt, QString key)
-{
-    QString ret = QString("%1%2%3%4").arg(appid).arg(q).arg(salt).arg(key);
-    return toMd5(ret);
-}
+
 
 class Parser: public QObject
 {
@@ -30,9 +18,7 @@ class Parser: public QObject
 public:
     bool init()
     {
-        qsrand(time(0));
         url = "https://translation.googleapis.com/language/translate/v2";
-        appid = "20180416000147193";
         key = "";
         return true;
     }
@@ -40,17 +26,7 @@ public:
     QPair <bool , QString> trans(const QString & string, const QString & to , const QString & from)
     {
         QEventLoop event;
-        salt = qrand() % INT_MAX;
-        //create postStr
-        sign = signCreate(appid, string, salt, key);
-        QString format = QString("q=%1&appid=%4&salt=%5&from=%2&to=%3&sign=%6")
-                .arg(string)
-                .arg(from)
-                .arg(to)
-                .arg(appid)
-                .arg(salt)
-                .arg(sign);
-        qDebug() << format;
+
         QString postStr = QString("%5?key=%4&source=%2&target=%3&q=%1")
                 .arg(string)
                 .arg(from)
@@ -87,7 +63,7 @@ public:
         }
 
         QJsonObject data(QJsonDocument::fromJson(buf).object());
-		QJsonObject jason = data["data"].toArray()[0].toObject();
+		QJsonObject jason = data["data"].toObject();
         if(!jason.contains("translations")
              || jason["translations"].toArray().isEmpty()
              || !jason["translations"].toArray()[0].toObject().contains("translatedText")) {
@@ -97,18 +73,26 @@ public:
         }
 
         return { true, jason["translations"].toArray()[0].toObject()["translatedText"].toString() };
-		//·µ»Ø¸ñÊ½{"from":"en","to":"zh","trans_result":[{"src":"apple","dst":"\u82f9\u679c"}]}
-    }
+		/*{
+			"data": {
+				"translations": [
+				{
+					"translatedText": "Mi nombre es Steve",
+						"detectedSourceLanguage" : "en"
+				}
+				]
+			}
+		}*/
+
+		delete reply;
+	}
 
 private:
     QString url;
     QString q;
     QString from;
     QString to;
-    QString appid;
-    int salt;
     QString key;
-    QString sign;
 
     QNetworkAccessManager himma;
 };

@@ -31,7 +31,7 @@ PdfTranslator::PdfTranslator(QWidget *parent)
 	brushAction->setStatusTip(tr("Delete line break"));
 	connect(brushAction, &QAction::triggered, this, &PdfTranslator::deleteEnter);
 	//·­Òë°´Å¥
-	translateAction = new QAction(QIcon(":/images/Resources/images/translate.png"), tr("&Translate..."), this);
+	translateAction = new QAction(QIcon(":/images/Resources/images/google-translate.png"), tr("&Translate..."), this);
 	translateAction->setStatusTip(tr("Translate text"));
 	connect(translateAction, &QAction::triggered, this, &PdfTranslator::translate);
 
@@ -112,8 +112,16 @@ void PdfTranslator::deleteEnter()
 void PdfTranslator::translate()
 {
 	QString text = textEdit->toPlainText();
+	QString to="zh";
+	QString from = "en";
+
 	if (!text.isEmpty()) {
-		auto res = trans->translate(text, QString("zh"), QString("en"));
+		if (!(text[0]<128)) {
+			to = "en";
+			from = "zh";
+		}
+
+		auto res = trans->translate(text, to, from);
 		if (res.first)
 			textEdit->setText(res.second);
 		else
